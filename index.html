@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>废话生成器 · 珍藏版</title>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #060d1f;
+  --navy-card: #0c1829;
+  --navy-hover: #111f38;
+  --gold: #c8a43a;
+  --gold-light: #e8c870;
+  --gold-dim: rgba(200, 164, 58, 0.25);
+  --gold-border: rgba(200, 164, 58, 0.35);
+  --text: #ddd5be;
+  --text-dim: #7a7060;
+  --text-muted: #3a3428;
+}
+
+body {
+  background: var(--navy);
+  color: var(--text);
+  font-family: 'Noto Sans SC', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64px 24px 80px;
+}
+
+/* 顶部细金线 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.container {
+  width: 100%;
+  max-width: 560px;
+}
+
+/* 标题 */
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.crown {
+  font-size: 11px;
+  letter-spacing: 6px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(42px, 10vw, 68px);
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 8px;
+  line-height: 1.15;
+}
+
+.title-sub {
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 14px;
+  color: var(--text-dim);
+  letter-spacing: 3px;
+  margin-top: 16px;
+}
+
+/* 金色分割线 */
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 48px 0;
+}
+.ornament::before, .ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-border));
+}
+.ornament::after {
+  background: linear-gradient(270deg, transparent, var(--gold-border));
+}
+.ornament-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.6;
+}
+
+/* 主题输入 */
+.section-label {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  opacity: 0.6;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-input {
+  flex: 1;
+  background: var(--navy-card);
+  border: 1px solid var(--gold-border);
+  border-radius: 2px;
+  padding: 14px 20px;
+  color: var(--text);
+  font-size: 16px;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 400;
+  letter-spacing: 2px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.theme-input::placeholder {
+  color: var(--text-muted);
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.theme-input:focus {
+  border-color: var(--gold);
+}
+
+.generate-btn {
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  padding: 14px 22px;
+  color: var(--gold);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s;
+}
+
+.generate-btn:hover {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+.generate-btn:active {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.generate-btn:disabled {
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+  background: transparent;
+  cursor: not-allowed;
+}
+
+/* 快捷主题 */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.tag {
+  background: transparent;
+  border: 1px solid rgba(200,164,58,0.15);
+  border-radius: 1px;
+  padding: 5px 14px;
+  color: var(--text-dim);
+  font-size: 12px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.tag:hover {
+  border-color: var(--gold-border);
+  color: var(--gold);
+}
+
+/* 输出区 */
+.output-section {
+  margin-top: 40px;
+  display: none;
+}
+
+.output-section.visible { display: block; }
+
+.output-card {
+  border: 1px solid var(--gold-border);
+  border-radius: 2px;
+  padding: 32px 32px 24px;
+  background: var(--navy-card);
+  position: relative;
+}
+
+/* 四角装饰 */
+.output-card::before, .output-card::after {
+  content: '';
+  position: absolute;
+  width: 10px; height: 10px;
+  border-color: var(--gold);
+  border-style: solid;
+  opacity: 0.5;
+}
+.output-card::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+.output-card::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+.output-tag {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  opacity: 0.5;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.output-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 17px;
+  line-height: 2;
+  color: var(--text);
+  letter-spacing: 1px;
+  min-height: 60px;
+}
+
+.output-text.loading {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 13px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.3; }
+}
+
+.output-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(200,164,58,0.1);
+}
+
+.output-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+}
+
+.copy-btn {
+  background: transparent;
+  border: none;
+  padding: 4px 0;
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 3px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  font-family: 'Noto Sans SC', sans-serif;
+  border-bottom: 1px solid transparent;
+}
+
+.copy-btn:hover {
+  opacity: 1;
+  border-bottom-color: var(--gold);
+}
+
+/* 错误 */
+.error-msg {
+  background: rgba(120, 30, 30, 0.3);
+  border: 1px solid rgba(200, 80, 80, 0.3);
+  border-radius: 2px;
+  padding: 12px 16px;
+  color: #e08888;
+  font-size: 13px;
+  margin-top: 16px;
+  letter-spacing: 0.5px;
+  display: none;
+}
+.error-msg.visible { display: block; }
+
+/* 底部 */
+.footer {
+  text-align: center;
+  margin-top: 64px;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  line-height: 2.2;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="crown">Edition Limitée</div>
+    <div class="title">废话生成器</div>
+    <div class="title-sub">听起来很有道理 · 细想什么都没有</div>
+  </div>
+
+  <div class="section-label">废话主题</div>
+  <div class="input-row">
+    <input type="text" class="theme-input" id="themeInput" placeholder="输入任意主题..." maxlength="20">
+    <button class="generate-btn" id="generateBtn" onclick="generate()">生成</button>
+  </div>
+  <div class="tags">
+    <button class="tag" onclick="setTheme('开会')">开会</button>
+    <button class="tag" onclick="setTheme('努力')">努力</button>
+    <button class="tag" onclick="setTheme('人生')">人生</button>
+    <button class="tag" onclick="setTheme('摸鱼')">摸鱼</button>
+    <button class="tag" onclick="setTheme('爱情')">爱情</button>
+    <button class="tag" onclick="setTheme('加班')">加班</button>
+    <button class="tag" onclick="setTheme('钱')">钱</button>
+    <button class="tag" onclick="setTheme('健康')">健康</button>
+  </div>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div class="output-section" id="outputSection">
+    <div class="ornament"><div class="ornament-dot"></div></div>
+    <div class="output-card">
+      <div class="output-tag">废话如下</div>
+      <div class="output-text" id="outputText"></div>
+      <div class="output-footer">
+        <div class="output-meta" id="outputMeta"></div>
+        <button class="copy-btn" onclick="copyText()">复制 ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    本工具仅供娱乐<br>
+    生成内容不代表任何真理<br>
+    请理性摸鱼
+  </div>
+
+</div>
+<script>
+  document.getElementById('themeInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') generate();
+  });
+
+  function setTheme(t) {
+    document.getElementById('themeInput').value = t;
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.add('visible');
+  }
+
+  function hideError() {
+    document.getElementById('errorMsg').classList.remove('visible');
+  }
+
+  async function generate() {
+    const theme = document.getElementById('themeInput').value.trim();
+    const btn = document.getElementById('generateBtn');
+    const outputSection = document.getElementById('outputSection');
+    const outputText = document.getElementById('outputText');
+    const outputMeta = document.getElementById('outputMeta');
+
+    hideError();
+    if (!theme) { showError('主题不能为空，你总得废话点什么吧'); return; }
+
+    btn.disabled = true;
+    btn.textContent = '生成中...';
+    outputSection.classList.add('visible');
+    outputText.className = 'output-text loading';
+    outputText.textContent = '正在提炼废话精华，请稍候...';
+    outputMeta.textContent = '';
+
+    try {
+      const resp = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme })
+      });
+
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || '请求失败');
+
+      outputText.className = 'output-text';
+      outputText.textContent = data.text;
+      outputMeta.textContent = `主题：${theme}`;
+
+    } catch (e) {
+      outputSection.classList.remove('visible');
+      showError('出错了：' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '生成';
+    }
+  }
+
+  function copyText() {
+    const text = document.getElementById('outputText').textContent;
+    if (!text || text.includes('请稍候')) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      const orig = btn.textContent;
+      btn.textContent = '已复制';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  }
+</script>
+</body>
+</html>
