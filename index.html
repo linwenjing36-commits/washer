@@ -42,115 +42,6 @@
       position: relative;
     }
 
-    /* —— 设置（API Key）—— */
-    .settings-trigger {
-      position: fixed;
-      top: 1.25rem;
-      right: 1.25rem;
-      z-index: 50;
-      width: 2.25rem;
-      height: 2.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      border: none;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      color: var(--text-tertiary);
-      cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-      transition: color 0.2s, background 0.2s, transform 0.15s;
-    }
-
-    .settings-trigger:hover {
-      color: var(--text-secondary);
-      background: rgba(255, 255, 255, 0.95);
-    }
-
-    .settings-trigger:active { transform: scale(0.94); }
-
-    .settings-trigger svg {
-      width: 1.05rem;
-      height: 1.05rem;
-    }
-
-    .settings-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-end;
-      padding: 4.5rem 1.25rem 1.25rem;
-      background: rgba(0, 0, 0, 0.18);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.25s ease, visibility 0.25s;
-    }
-
-    .settings-backdrop.open {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .settings-panel {
-      width: min(100%, 340px);
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.15rem 1.25rem 1.25rem;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-      transform: translateY(-8px) scale(0.98);
-      opacity: 0;
-      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
-    }
-
-    .settings-backdrop.open .settings-panel {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-    }
-
-    .settings-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-
-    .settings-title {
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: var(--text);
-      letter-spacing: 0.02em;
-    }
-
-    .settings-close {
-      width: 1.75rem;
-      height: 1.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      border: none;
-      border-radius: 50%;
-      background: var(--bg);
-      color: var(--text-tertiary);
-      font-size: 1.125rem;
-      line-height: 1;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .settings-close:hover {
-      background: #ebebed;
-      color: var(--text-secondary);
-    }
-
     .hero {
       text-align: center;
       margin-bottom: 2.75rem;
@@ -200,14 +91,6 @@
       margin-bottom: 0.6rem;
     }
 
-    .api-row {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .api-row input { flex: 1; }
-
-    input[type="password"],
     input[type="text"] {
       width: 100%;
       padding: 0.7rem 0.85rem;
@@ -227,29 +110,6 @@
     input:focus {
       border-color: rgba(0, 0, 0, 0.2);
       box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04);
-    }
-
-    .btn-ghost {
-      flex-shrink: 0;
-      padding: 0.7rem 0.9rem;
-      font-family: inherit;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .btn-ghost:hover { background: #ebebed; }
-
-    .field-hint {
-      font-size: 0.6875rem;
-      color: var(--text-tertiary);
-      margin-top: 0.5rem;
-      line-height: 1.5;
     }
 
     .topic-row {
@@ -563,28 +423,6 @@
   </style>
 </head>
 <body>
-  <button type="button" class="settings-trigger" id="settingsBtn" aria-label="打开设置" title="设置">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-    </svg>
-  </button>
-
-  <div class="settings-backdrop" id="settingsBackdrop" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
-    <div class="settings-panel" id="settingsPanel">
-      <div class="settings-header">
-        <span class="settings-title" id="settingsTitle">DeepSeek API Key</span>
-        <button type="button" class="settings-close" id="settingsClose" aria-label="关闭">×</button>
-      </div>
-      <p class="field-label">API KEY</p>
-      <div class="api-row">
-        <input type="password" id="apiKey" placeholder="sk-xxxxxxxx" autocomplete="off" />
-        <button type="button" class="btn-ghost" id="toggleKey">显示</button>
-      </div>
-      <p class="field-hint">密钥仅保存在本机浏览器，除 DeepSeek 官方接口外不会上传至其他服务器。</p>
-    </div>
-  </div>
-
   <main>
     <header class="hero">
       <p class="hero-eyebrow">Philosophical Nonsense</p>
@@ -646,8 +484,6 @@
   </footer>
 
   <script>
-    const STORAGE_KEY = "deepseek_api_key_washer";
-
     const RANK_LABELS = [
       "您已进入·初级废话境界",
       "恭喜解锁·人间清醒成就",
@@ -659,8 +495,6 @@
       "官方盖章·逻辑闭环废话大师",
     ];
 
-    const apiKeyInput = document.getElementById("apiKey");
-    const toggleKeyBtn = document.getElementById("toggleKey");
     const themeInput = document.getElementById("themeInput");
     const generateBtn = document.getElementById("generateBtn");
     const errorMsg = document.getElementById("errorMsg");
@@ -678,46 +512,6 @@
     let latestText = "";
     let printAbort = null;
     let audioCtx = null;
-
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) apiKeyInput.value = saved;
-
-    toggleKeyBtn.addEventListener("click", () => {
-      const show = apiKeyInput.type === "password";
-      apiKeyInput.type = show ? "text" : "password";
-      toggleKeyBtn.textContent = show ? "隐藏" : "显示";
-    });
-
-    const settingsBtn = document.getElementById("settingsBtn");
-    const settingsBackdrop = document.getElementById("settingsBackdrop");
-    const settingsPanel = document.getElementById("settingsPanel");
-    const settingsClose = document.getElementById("settingsClose");
-
-    function openSettings() {
-      settingsBackdrop.hidden = false;
-      requestAnimationFrame(() => settingsBackdrop.classList.add("open"));
-      settingsBtn.setAttribute("aria-expanded", "true");
-      setTimeout(() => apiKeyInput.focus(), 280);
-    }
-
-    function closeSettings() {
-      settingsBackdrop.classList.remove("open");
-      settingsBtn.setAttribute("aria-expanded", "false");
-      setTimeout(() => {
-        if (!settingsBackdrop.classList.contains("open")) settingsBackdrop.hidden = true;
-      }, 260);
-    }
-
-    settingsBtn.setAttribute("aria-expanded", "false");
-    settingsBtn.addEventListener("click", openSettings);
-    settingsClose.addEventListener("click", closeSettings);
-    settingsBackdrop.addEventListener("click", (e) => {
-      if (e.target === settingsBackdrop) closeSettings();
-    });
-    settingsPanel.addEventListener("click", (e) => e.stopPropagation());
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && settingsBackdrop.classList.contains("open")) closeSettings();
-    });
 
     document.querySelectorAll(".chip").forEach((chip) => {
       chip.addEventListener("click", () => {
@@ -892,23 +686,15 @@
     }
 
     async function generate() {
-      const apiKey = apiKeyInput.value.trim();
       const theme = themeInput.value.trim();
 
       hideError();
       abortPrint();
 
-      if (!apiKey) {
-        showError("请先填入 API Key，没有钥匙开不了这台废话机。");
-        openSettings();
-        return;
-      }
       if (!theme) {
         showError("主题不能为空——总得找点东西来挖苦吧。");
         return;
       }
-
-      localStorage.setItem(STORAGE_KEY, apiKey);
 
       try { getAudioCtx().resume(); } catch (_) {}
 
@@ -929,36 +715,20 @@
       outputText.textContent = "正在向宇宙申请一句刻薄的废话…";
       syncReceiptHeight();
 
-      const prompt = `请围绕「${theme}」这个主题，写一段中文「毒舌哲学」式废话。
-
-要求：
-1. 语气刻薄、讽刺、人间清醒，像在看穿一切后冷冷点评，但不要人身攻击或脏话
-2. 表面逻辑自洽、用词高级，细想却是循环论证或空洞结论
-3. 可善用「因为…所以…」「虽然…但是…」「本质上…」等句式
-4. 60-100字，只输出这一段话，不要标题、不要解释、不要引号`;
-
       try {
-        const resp = await fetch("https://api.deepseek.com/chat/completions", {
+        const resp = await fetch("/api/generate", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
-          },
-          body: JSON.stringify({
-            model: "deepseek-chat",
-            messages: [{ role: "user", content: prompt }],
-            max_tokens: 300,
-            temperature: 1.15,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ theme }),
         });
 
+        const data = await resp.json().catch(() => ({}));
+
         if (!resp.ok) {
-          const err = await resp.json().catch(() => ({}));
-          throw new Error(err.error?.message || `HTTP ${resp.status}`);
+          throw new Error(data.error || `HTTP ${resp.status}`);
         }
 
-        const data = await resp.json();
-        const text = data.choices?.[0]?.message?.content?.trim();
+        const text = data.text?.trim();
         if (!text) throw new Error("返回内容为空");
 
         receiptPaper.style.transition = "none";
