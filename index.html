@@ -1,439 +1,825 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>废话生成器 · 珍藏版</title>
-<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet">
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>废话生成器</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --bg-elevated: #ffffff;
+      --text: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #86868b;
+      --border: rgba(0, 0, 0, 0.08);
+      --accent: #1d1d1f;
+      --receipt: #faf8f4;
+      --receipt-ink: #2c2c2c;
+      --slot: #2a2a2c;
+    }
 
-:root {
-  --navy: #060d1f;
-  --navy-card: #0c1829;
-  --navy-hover: #111f38;
-  --gold: #c8a43a;
-  --gold-light: #e8c870;
-  --gold-dim: rgba(200, 164, 58, 0.25);
-  --gold-border: rgba(200, 164, 58, 0.35);
-  --text: #ddd5be;
-  --text-dim: #7a7060;
-  --text-muted: #3a3428;
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  background: var(--navy);
-  color: var(--text);
-  font-family: 'Noto Sans SC', sans-serif;
-  font-weight: 300;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 64px 24px 80px;
-}
+    body {
+      font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
 
-/* 顶部细金线 */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
+    main {
+      flex: 1;
+      max-width: 580px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem 2rem;
+    }
 
-.container {
-  width: 100%;
-  max-width: 560px;
-}
+    .hero {
+      text-align: center;
+      margin-bottom: 2.75rem;
+    }
 
-/* 标题 */
-.header {
-  text-align: center;
-  margin-bottom: 56px;
-}
+    .hero-eyebrow {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 0.75rem;
+    }
 
-.crown {
-  font-size: 11px;
-  letter-spacing: 6px;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 20px;
-  opacity: 0.7;
-}
+    h1 {
+      font-family: "Noto Serif SC", "Songti SC", serif;
+      font-size: clamp(1.75rem, 5vw, 2.25rem);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      line-height: 1.3;
+    }
 
-.title {
-  font-family: 'Noto Serif SC', serif;
-  font-size: clamp(42px, 10vw, 68px);
-  font-weight: 600;
-  color: var(--gold-light);
-  letter-spacing: 8px;
-  line-height: 1.15;
-}
+    .hero-sub {
+      margin-top: 0.65rem;
+      font-size: 0.9375rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
 
-.title-sub {
-  font-family: 'ZCOOL KuaiLe', cursive;
-  font-size: 14px;
-  color: var(--text-dim);
-  letter-spacing: 3px;
-  margin-top: 16px;
-}
+    .panel {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.35rem;
+      margin-bottom: 1rem;
+    }
 
-/* 金色分割线 */
-.ornament {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 48px 0;
-}
-.ornament::before, .ornament::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-border));
-}
-.ornament::after {
-  background: linear-gradient(270deg, transparent, var(--gold-border));
-}
-.ornament-dot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--gold);
-  opacity: 0.6;
-}
+    .field-label {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      margin-bottom: 0.6rem;
+    }
 
-/* 主题输入 */
-.section-label {
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: var(--gold);
-  opacity: 0.6;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-}
+    .api-row {
+      display: flex;
+      gap: 0.5rem;
+    }
 
-.input-row {
-  display: flex;
-  gap: 10px;
-}
+    .api-row input { flex: 1; }
 
-.theme-input {
-  flex: 1;
-  background: var(--navy-card);
-  border: 1px solid var(--gold-border);
-  border-radius: 2px;
-  padding: 14px 20px;
-  color: var(--text);
-  font-size: 16px;
-  font-family: 'Noto Serif SC', serif;
-  font-weight: 400;
-  letter-spacing: 2px;
-  outline: none;
-  transition: border-color 0.3s;
-}
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
 
-.theme-input::placeholder {
-  color: var(--text-muted);
-  font-family: 'Noto Sans SC', sans-serif;
-  font-size: 13px;
-  letter-spacing: 1px;
-}
+    input::placeholder { color: #aeaeb2; }
 
-.theme-input:focus {
-  border-color: var(--gold);
-}
+    input:focus {
+      border-color: rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04);
+    }
 
-.generate-btn {
-  background: transparent;
-  border: 1px solid var(--gold);
-  border-radius: 2px;
-  padding: 14px 22px;
-  color: var(--gold);
-  font-family: 'Noto Serif SC', serif;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.25s;
-}
+    .btn-ghost {
+      flex-shrink: 0;
+      padding: 0.7rem 0.9rem;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
 
-.generate-btn:hover {
-  background: var(--gold);
-  color: var(--navy);
-}
+    .btn-ghost:hover { background: #ebebed; }
 
-.generate-btn:active {
-  opacity: 0.8;
-  transform: scale(0.98);
-}
+    .field-hint {
+      font-size: 0.6875rem;
+      color: var(--text-tertiary);
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
 
-.generate-btn:disabled {
-  border-color: var(--text-muted);
-  color: var(--text-muted);
-  background: transparent;
-  cursor: not-allowed;
-}
+    .topic-row {
+      display: flex;
+      gap: 0.6rem;
+    }
 
-/* 快捷主题 */
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
+    .topic-row input { flex: 1; min-width: 0; }
 
-.tag {
-  background: transparent;
-  border: 1px solid rgba(200,164,58,0.15);
-  border-radius: 1px;
-  padding: 5px 14px;
-  color: var(--text-dim);
-  font-size: 12px;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: 'Noto Sans SC', sans-serif;
-}
+    .btn-generate {
+      flex-shrink: 0;
+      padding: 0.7rem 1.25rem;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 980px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
 
-.tag:hover {
-  border-color: var(--gold-border);
-  color: var(--gold);
-}
+    .btn-generate:hover:not(:disabled) { opacity: 0.88; }
 
-/* 输出区 */
-.output-section {
-  margin-top: 40px;
-  display: none;
-}
+    .btn-generate:active:not(:disabled) { transform: scale(0.98); }
 
-.output-section.visible { display: block; }
+    .btn-generate:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
 
-.output-card {
-  border: 1px solid var(--gold-border);
-  border-radius: 2px;
-  padding: 32px 32px 24px;
-  background: var(--navy-card);
-  position: relative;
-}
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
 
-/* 四角装饰 */
-.output-card::before, .output-card::after {
-  content: '';
-  position: absolute;
-  width: 10px; height: 10px;
-  border-color: var(--gold);
-  border-style: solid;
-  opacity: 0.5;
-}
-.output-card::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
-.output-card::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+    .chip {
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 400;
+      padding: 0.3rem 0.7rem;
+      color: var(--text-secondary);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 980px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
 
-.output-tag {
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: var(--gold);
-  opacity: 0.5;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-}
+    .chip:hover {
+      color: var(--text);
+      border-color: rgba(0, 0, 0, 0.18);
+      background: var(--bg);
+    }
 
-.output-text {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 17px;
-  line-height: 2;
-  color: var(--text);
-  letter-spacing: 1px;
-  min-height: 60px;
-}
+    .error-msg {
+      font-size: 0.8125rem;
+      color: #bf4800;
+      margin-top: 0.75rem;
+      display: none;
+    }
 
-.output-text.loading {
-  font-family: 'Noto Sans SC', sans-serif;
-  font-size: 13px;
-  color: var(--text-dim);
-  letter-spacing: 2px;
-  animation: pulse 1.5s infinite;
-}
+    .error-msg.visible { display: block; }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 0.3; }
-}
+    /* —— 收银机小票区 —— */
+    .printer-section {
+      margin-top: 2rem;
+      display: none;
+    }
 
-.output-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(200,164,58,0.1);
-}
+    .printer-section.visible { display: block; }
 
-.output-meta {
-  font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 1.5px;
-}
+    .rank-line {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      margin-bottom: 0.85rem;
+      min-height: 1.2em;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
 
-.copy-btn {
-  background: transparent;
-  border: none;
-  padding: 4px 0;
-  color: var(--gold);
-  font-size: 11px;
-  letter-spacing: 3px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-  font-family: 'Noto Sans SC', sans-serif;
-  border-bottom: 1px solid transparent;
-}
+    .rank-line.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-.copy-btn:hover {
-  opacity: 1;
-  border-bottom-color: var(--gold);
-}
+    .printer-body {
+      background: linear-gradient(180deg, #3a3a3c 0%, #2a2a2c 12%, #1f1f21 100%);
+      border-radius: 14px 14px 8px 8px;
+      padding: 0 1.25rem 1.25rem;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.08) inset,
+        0 12px 40px rgba(0, 0, 0, 0.12);
+    }
 
-/* 错误 */
-.error-msg {
-  background: rgba(120, 30, 30, 0.3);
-  border: 1px solid rgba(200, 80, 80, 0.3);
-  border-radius: 2px;
-  padding: 12px 16px;
-  color: #e08888;
-  font-size: 13px;
-  margin-top: 16px;
-  letter-spacing: 0.5px;
-  display: none;
-}
-.error-msg.visible { display: block; }
+    .printer-face {
+      display: flex;
+      justify-content: center;
+      padding: 0.85rem 0 0.5rem;
+    }
 
-/* 底部 */
-.footer {
-  text-align: center;
-  margin-top: 64px;
-  font-size: 11px;
-  color: var(--text-muted);
-  letter-spacing: 3px;
-  line-height: 2.2;
-}
-</style>
+    .printer-led {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34c759;
+      box-shadow: 0 0 6px rgba(52, 199, 89, 0.6);
+      margin-right: auto;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .printer-led.on { opacity: 1; }
+
+    .printer-brand {
+      font-size: 0.625rem;
+      letter-spacing: 0.2em;
+      color: rgba(255, 255, 255, 0.25);
+      text-transform: uppercase;
+    }
+
+    .printer-slot-wrap {
+      position: relative;
+      margin: 0 -0.5rem;
+    }
+
+    .printer-slot {
+      height: 6px;
+      background: #0a0a0b;
+      border-radius: 3px;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.06) inset,
+        0 2px 8px rgba(0, 0, 0, 0.5) inset;
+      position: relative;
+      z-index: 2;
+    }
+
+    .receipt-viewport {
+      position: relative;
+      margin-top: -3px;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.05s linear;
+    }
+
+    .receipt-viewport.printing,
+    .receipt-viewport.done {
+      max-height: 520px;
+    }
+
+    .receipt-paper {
+      background: var(--receipt);
+      margin: 0 0.35rem;
+      padding: 1.1rem 1.15rem 1rem;
+      transform: translateY(-100%);
+      transition: transform 0.08s linear;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+
+    .receipt-paper::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 3px,
+        rgba(0, 0, 0, 0.04) 3px,
+        rgba(0, 0, 0, 0.04) 6px
+      );
+    }
+
+    .receipt-paper.emerging {
+      transform: translateY(0);
+    }
+
+    .receipt-dashed {
+      border-bottom: 1px dashed rgba(0, 0, 0, 0.12);
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.65rem;
+    }
+
+    .receipt-title {
+      font-size: 0.625rem;
+      letter-spacing: 0.25em;
+      color: #8a8a8e;
+      text-align: center;
+      margin-bottom: 0.15rem;
+    }
+
+    .receipt-time {
+      font-size: 0.625rem;
+      color: #aeaeb2;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .receipt-text {
+      font-family: "Noto Serif SC", "Songti SC", serif;
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--receipt-ink);
+      letter-spacing: 0.04em;
+      min-height: 3em;
+    }
+
+    .receipt-text.loading {
+      font-family: "Noto Sans SC", sans-serif;
+      font-size: 0.8125rem;
+      color: #aeaeb2;
+      letter-spacing: 0;
+    }
+
+    .receipt-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--receipt-ink);
+      margin-left: 1px;
+      vertical-align: text-bottom;
+      animation: cursor-blink 0.8s step-end infinite;
+    }
+
+    @keyframes cursor-blink {
+      50% { opacity: 0; }
+    }
+
+    .receipt-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed rgba(0, 0, 0, 0.1);
+    }
+
+    .receipt-meta {
+      font-size: 0.625rem;
+      color: #aeaeb2;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-copy {
+      font-family: inherit;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      padding: 0.35rem 0.75rem;
+      color: var(--text-secondary);
+      background: transparent;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 980px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-copy:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--text);
+    }
+
+    .receipt-zigzag {
+      height: 8px;
+      margin: 0 0.35rem;
+      background:
+        linear-gradient(135deg, var(--receipt) 50%, transparent 50%) 0 0 / 10px 8px,
+        linear-gradient(225deg, var(--receipt) 50%, transparent 50%) 0 0 / 10px 8px;
+      background-repeat: repeat-x;
+      background-color: #e8e6e2;
+      transform: translateY(-1px);
+    }
+
+    /* —— Apple 式底栏 —— */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 1.75rem 1.5rem 2.25rem;
+      text-align: center;
+      background: var(--bg);
+    }
+
+    .site-footer p {
+      font-size: 0.6875rem;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--text-tertiary);
+      letter-spacing: -0.01em;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .site-footer p + p { margin-top: 0.35rem; }
+
+    .site-footer a {
+      color: var(--text-tertiary);
+      text-decoration: none;
+    }
+
+    .site-footer a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-<div class="container">
+  <main>
+    <header class="hero">
+      <p class="hero-eyebrow">Philosophical Nonsense</p>
+      <h1>废话生成器</h1>
+      <p class="hero-sub">表面人间清醒，细品全是废话</p>
+    </header>
 
-  <div class="header">
-    <div class="crown">Edition Limitée</div>
-    <div class="title">废话生成器</div>
-    <div class="title-sub">听起来很有道理 · 细想什么都没有</div>
-  </div>
-
-  <div class="section-label">废话主题</div>
-  <div class="input-row">
-    <input type="text" class="theme-input" id="themeInput" placeholder="输入任意主题..." maxlength="20">
-    <button class="generate-btn" id="generateBtn" onclick="generate()">生成</button>
-  </div>
-  <div class="tags">
-    <button class="tag" onclick="setTheme('开会')">开会</button>
-    <button class="tag" onclick="setTheme('努力')">努力</button>
-    <button class="tag" onclick="setTheme('人生')">人生</button>
-    <button class="tag" onclick="setTheme('摸鱼')">摸鱼</button>
-    <button class="tag" onclick="setTheme('爱情')">爱情</button>
-    <button class="tag" onclick="setTheme('加班')">加班</button>
-    <button class="tag" onclick="setTheme('钱')">钱</button>
-    <button class="tag" onclick="setTheme('健康')">健康</button>
-  </div>
-
-  <div class="error-msg" id="errorMsg"></div>
-
-  <div class="output-section" id="outputSection">
-    <div class="ornament"><div class="ornament-dot"></div></div>
-    <div class="output-card">
-      <div class="output-tag">废话如下</div>
-      <div class="output-text" id="outputText"></div>
-      <div class="output-footer">
-        <div class="output-meta" id="outputMeta"></div>
-        <button class="copy-btn" onclick="copyText()">复制 ↗</button>
+    <section class="panel">
+      <p class="field-label">DEEPSEEK API KEY</p>
+      <div class="api-row">
+        <input type="password" id="apiKey" placeholder="sk-xxxxxxxx" autocomplete="off" />
+        <button type="button" class="btn-ghost" id="toggleKey">显示</button>
       </div>
-    </div>
-  </div>
+      <p class="field-hint">密钥仅保存在本机浏览器，除 DeepSeek 官方接口外不会上传至其他服务器。</p>
+    </section>
 
-  <div class="footer">
-    本工具仅供娱乐<br>
-    生成内容不代表任何真理<br>
-    请理性摸鱼
-  </div>
+    <section class="panel">
+      <p class="field-label">废话主题</p>
+      <div class="topic-row">
+        <input type="text" id="themeInput" placeholder="随便写点什么…" maxlength="20" />
+        <button type="button" class="btn-generate" id="generateBtn">生成</button>
+      </div>
+      <div class="chips">
+        <button type="button" class="chip" data-theme="早八">早八</button>
+        <button type="button" class="chip" data-theme="前任">前任</button>
+        <button type="button" class="chip" data-theme="减肥">减肥</button>
+        <button type="button" class="chip" data-theme="人生意义">人生意义</button>
+        <button type="button" class="chip" data-theme="开会">开会</button>
+        <button type="button" class="chip" data-theme="努力">努力</button>
+        <button type="button" class="chip" data-theme="摸鱼">摸鱼</button>
+        <button type="button" class="chip" data-theme="加班">加班</button>
+      </div>
+    </section>
 
-</div>
-<script>
-  document.getElementById('themeInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') generate();
-  });
+    <p class="error-msg" id="errorMsg" role="alert"></p>
 
-  function setTheme(t) {
-    document.getElementById('themeInput').value = t;
-  }
+    <section class="printer-section" id="printerSection" aria-live="polite">
+      <p class="rank-line" id="rankLine"></p>
+      <div class="printer-body">
+        <div class="printer-face">
+          <span class="printer-led" id="printerLed"></span>
+          <span class="printer-brand">Nonsense · Pro</span>
+        </div>
+        <div class="printer-slot-wrap">
+          <div class="printer-slot" aria-hidden="true"></div>
+        </div>
+        <div class="receipt-viewport" id="receiptViewport">
+          <div class="receipt-paper" id="receiptPaper">
+            <div class="receipt-dashed">
+              <p class="receipt-title">—— 毒舌哲学收据 ——</p>
+              <p class="receipt-time" id="receiptTime"></p>
+            </div>
+            <p class="receipt-text loading" id="outputText">正在酝酿…</p>
+            <div class="receipt-footer" id="receiptFooter" style="display: none;">
+              <span class="receipt-meta" id="outputMeta"></span>
+              <button type="button" class="btn-copy" id="copyBtn">复制</button>
+            </div>
+          </div>
+        </div>
+        <div class="receipt-zigzag" aria-hidden="true"></div>
+      </div>
+    </section>
+  </main>
 
-  function showError(msg) {
-    const el = document.getElementById('errorMsg');
-    el.textContent = msg;
-    el.classList.add('visible');
-  }
+  <footer class="site-footer">
+    <p>Made by Zing14</p>
+    <p>隐私政策：我们不收集你的数据，因为你的生活还没这些废话有意思。</p>
+  </footer>
 
-  function hideError() {
-    document.getElementById('errorMsg').classList.remove('visible');
-  }
+  <script>
+    const STORAGE_KEY = "deepseek_api_key_washer";
 
-  async function generate() {
-    const theme = document.getElementById('themeInput').value.trim();
-    const btn = document.getElementById('generateBtn');
-    const outputSection = document.getElementById('outputSection');
-    const outputText = document.getElementById('outputText');
-    const outputMeta = document.getElementById('outputMeta');
+    const RANK_LABELS = [
+      "您已进入·初级废话境界",
+      "恭喜解锁·人间清醒成就",
+      "鉴定结果·中级毒舌哲学家",
+      "系统评定·高级废话宗师",
+      "警告：您的清醒已超出人类承受范围",
+      "成就达成·废话界隐形冠军",
+      "段位认证·看似深刻实则空心",
+      "官方盖章·逻辑闭环废话大师",
+    ];
 
-    hideError();
-    if (!theme) { showError('主题不能为空，你总得废话点什么吧'); return; }
+    const apiKeyInput = document.getElementById("apiKey");
+    const toggleKeyBtn = document.getElementById("toggleKey");
+    const themeInput = document.getElementById("themeInput");
+    const generateBtn = document.getElementById("generateBtn");
+    const errorMsg = document.getElementById("errorMsg");
+    const printerSection = document.getElementById("printerSection");
+    const rankLine = document.getElementById("rankLine");
+    const printerLed = document.getElementById("printerLed");
+    const receiptViewport = document.getElementById("receiptViewport");
+    const receiptPaper = document.getElementById("receiptPaper");
+    const receiptTime = document.getElementById("receiptTime");
+    const outputText = document.getElementById("outputText");
+    const receiptFooter = document.getElementById("receiptFooter");
+    const outputMeta = document.getElementById("outputMeta");
+    const copyBtn = document.getElementById("copyBtn");
 
-    btn.disabled = true;
-    btn.textContent = '生成中...';
-    outputSection.classList.add('visible');
-    outputText.className = 'output-text loading';
-    outputText.textContent = '正在提炼废话精华，请稍候...';
-    outputMeta.textContent = '';
+    let latestText = "";
+    let printAbort = null;
+    let audioCtx = null;
 
-    try {
-      const resp = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme })
-      });
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) apiKeyInput.value = saved;
 
-      const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error || '请求失败');
-
-      outputText.className = 'output-text';
-      outputText.textContent = data.text;
-      outputMeta.textContent = `主题：${theme}`;
-
-    } catch (e) {
-      outputSection.classList.remove('visible');
-      showError('出错了：' + e.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '生成';
-    }
-  }
-
-  function copyText() {
-    const text = document.getElementById('outputText').textContent;
-    if (!text || text.includes('请稍候')) return;
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.querySelector('.copy-btn');
-      const orig = btn.textContent;
-      btn.textContent = '已复制';
-      setTimeout(() => btn.textContent = orig, 1500);
+    toggleKeyBtn.addEventListener("click", () => {
+      const show = apiKeyInput.type === "password";
+      apiKeyInput.type = show ? "text" : "password";
+      toggleKeyBtn.textContent = show ? "隐藏" : "显示";
     });
-  }
-</script>
+
+    document.querySelectorAll(".chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        themeInput.value = chip.dataset.theme;
+        themeInput.focus();
+      });
+    });
+
+    themeInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") generate();
+    });
+
+    copyBtn.addEventListener("click", () => {
+      if (!latestText) return;
+      navigator.clipboard.writeText(latestText).then(() => {
+        const orig = copyBtn.textContent;
+        copyBtn.textContent = "已复制";
+        setTimeout(() => { copyBtn.textContent = orig; }, 1500);
+      });
+    });
+
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      return audioCtx;
+    }
+
+    function playPrintTick() {
+      try {
+        const ctx = getAudioCtx();
+        if (ctx.state === "suspended") ctx.resume();
+        const t = ctx.currentTime;
+        const bufferSize = ctx.sampleRate * 0.04;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.15));
+        }
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        const filter = ctx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.value = 2800;
+        filter.Q.value = 0.8;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.12, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+        source.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        source.start(t);
+        source.stop(t + 0.05);
+      } catch (_) { /* 静音环境忽略 */ }
+    }
+
+    function playPrintDone() {
+      try {
+        const ctx = getAudioCtx();
+        if (ctx.state === "suspended") ctx.resume();
+        const t = ctx.currentTime;
+        [440, 554].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0, t + i * 0.06);
+          gain.gain.linearRampToValueAtTime(0.06, t + i * 0.06 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.15);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t + i * 0.06);
+          osc.stop(t + i * 0.06 + 0.16);
+        });
+      } catch (_) {}
+    }
+
+    function randomRank() {
+      return RANK_LABELS[Math.floor(Math.random() * RANK_LABELS.length)];
+    }
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      errorMsg.classList.add("visible");
+    }
+
+    function hideError() {
+      errorMsg.classList.remove("visible");
+    }
+
+    function abortPrint() {
+      if (printAbort) {
+        printAbort.aborted = true;
+        printAbort = null;
+      }
+    }
+
+    function resetPrinter() {
+      abortPrint();
+      rankLine.classList.remove("show");
+      rankLine.textContent = "";
+      printerLed.classList.remove("on");
+      receiptViewport.classList.remove("printing", "done");
+      receiptPaper.classList.remove("emerging");
+      receiptPaper.style.transform = "translateY(-100%)";
+      receiptFooter.style.display = "none";
+      outputText.className = "receipt-text loading";
+      outputText.textContent = "正在酝酿…";
+    }
+
+    function formatReceiptTime() {
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    async function printReceipt(text, theme) {
+      abortPrint();
+      const ctrl = { aborted: false };
+      printAbort = ctrl;
+
+      outputText.className = "receipt-text";
+      outputText.innerHTML = '<span class="receipt-cursor"></span>';
+      receiptFooter.style.display = "none";
+
+      receiptTime.textContent = formatReceiptTime();
+      printerLed.classList.add("on");
+      receiptViewport.classList.add("printing");
+      receiptPaper.classList.add("emerging");
+
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      if (ctrl.aborted) return;
+
+      receiptPaper.style.transition = "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)";
+      receiptPaper.style.transform = "translateY(0)";
+
+      await new Promise((r) => setTimeout(r, 380));
+      if (ctrl.aborted) return;
+
+      let displayed = "";
+      const chars = [...text];
+      const tickEvery = 2;
+
+      for (let i = 0; i < chars.length; i++) {
+        if (ctrl.aborted) return;
+        displayed += chars[i];
+        outputText.innerHTML = displayed + '<span class="receipt-cursor"></span>';
+
+        const lineCount = displayed.split("\n").length;
+        const approxHeight = Math.min(60 + lineCount * 28 + displayed.length * 0.5, 480);
+        receiptViewport.style.maxHeight = approxHeight + "px";
+
+        if (i % tickEvery === 0) playPrintTick();
+        await new Promise((r) => setTimeout(r, 38 + Math.random() * 22));
+      }
+
+      if (ctrl.aborted) return;
+
+      outputText.textContent = displayed;
+      receiptViewport.classList.add("done");
+      receiptFooter.style.display = "flex";
+      outputMeta.textContent = `主题：${theme}`;
+      latestText = text;
+      playPrintDone();
+
+      rankLine.textContent = randomRank();
+      requestAnimationFrame(() => rankLine.classList.add("show"));
+
+      printAbort = null;
+    }
+
+    async function generate() {
+      const apiKey = apiKeyInput.value.trim();
+      const theme = themeInput.value.trim();
+
+      hideError();
+      abortPrint();
+
+      if (!apiKey) {
+        showError("请先填入 API Key，没有钥匙开不了这台废话机。");
+        return;
+      }
+      if (!theme) {
+        showError("主题不能为空——总得找点东西来挖苦吧。");
+        return;
+      }
+
+      localStorage.setItem(STORAGE_KEY, apiKey);
+
+      try { getAudioCtx().resume(); } catch (_) {}
+
+      generateBtn.disabled = true;
+      generateBtn.textContent = "生成中";
+      printerSection.classList.add("visible");
+      abortPrint();
+      rankLine.classList.remove("show");
+      rankLine.textContent = "";
+      receiptFooter.style.display = "none";
+      latestText = "";
+      printerLed.classList.add("on");
+      receiptViewport.classList.add("printing");
+      receiptViewport.style.maxHeight = "120px";
+      receiptPaper.classList.add("emerging");
+      receiptPaper.style.transition = "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)";
+      receiptPaper.style.transform = "translateY(0)";
+      outputText.className = "receipt-text loading";
+      outputText.textContent = "正在向宇宙申请一句刻薄的废话…";
+
+      const prompt = `请围绕「${theme}」这个主题，写一段中文「毒舌哲学」式废话。
+
+要求：
+1. 语气刻薄、讽刺、人间清醒，像在看穿一切后冷冷点评，但不要人身攻击或脏话
+2. 表面逻辑自洽、用词高级，细想却是循环论证或空洞结论
+3. 可善用「因为…所以…」「虽然…但是…」「本质上…」等句式
+4. 60-100字，只输出这一段话，不要标题、不要解释、不要引号`;
+
+      try {
+        const resp = await fetch("https://api.deepseek.com/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "deepseek-chat",
+            messages: [{ role: "user", content: prompt }],
+            max_tokens: 300,
+            temperature: 1.15,
+          }),
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          throw new Error(err.error?.message || `HTTP ${resp.status}`);
+        }
+
+        const data = await resp.json();
+        const text = data.choices?.[0]?.message?.content?.trim();
+        if (!text) throw new Error("返回内容为空");
+
+        receiptPaper.style.transition = "none";
+        receiptPaper.style.transform = "translateY(-100%)";
+        receiptPaper.classList.remove("emerging");
+        receiptViewport.style.maxHeight = "0";
+        receiptViewport.classList.remove("done");
+
+        await new Promise((r) => requestAnimationFrame(r));
+
+        await printReceipt(text, theme);
+      } catch (e) {
+        abortPrint();
+        printerSection.classList.remove("visible");
+        printerLed.classList.remove("on");
+        showError("出错了：" + e.message);
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = "生成";
+      }
+    }
+
+    generateBtn.addEventListener("click", generate);
+  </script>
 </body>
 </html>
