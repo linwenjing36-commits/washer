@@ -39,6 +39,116 @@
       width: 100%;
       margin: 0 auto;
       padding: 3.5rem 1.5rem 2rem;
+      position: relative;
+    }
+
+    /* —— 设置（API Key）—— */
+    .settings-trigger {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 50;
+      width: 2.25rem;
+      height: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--text-tertiary);
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      transition: color 0.2s, background 0.2s, transform 0.15s;
+    }
+
+    .settings-trigger:hover {
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .settings-trigger:active { transform: scale(0.94); }
+
+    .settings-trigger svg {
+      width: 1.05rem;
+      height: 1.05rem;
+    }
+
+    .settings-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 4.5rem 1.25rem 1.25rem;
+      background: rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s;
+    }
+
+    .settings-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .settings-panel {
+      width: min(100%, 340px);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.15rem 1.25rem 1.25rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      transform: translateY(-8px) scale(0.98);
+      opacity: 0;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+    }
+
+    .settings-backdrop.open .settings-panel {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .settings-title {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .settings-close {
+      width: 1.75rem;
+      height: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: var(--bg);
+      color: var(--text-tertiary);
+      font-size: 1.125rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .settings-close:hover {
+      background: #ebebed;
+      color: var(--text-secondary);
     }
 
     .hero {
@@ -65,11 +175,13 @@
     }
 
     .hero-sub {
-      margin-top: 0.65rem;
-      font-size: 0.9375rem;
-      font-weight: 300;
-      color: var(--text-secondary);
-      letter-spacing: 0.02em;
+      margin-top: 0.85rem;
+      font-size: 0.8125rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-tertiary);
+      letter-spacing: 0.32em;
+      text-indent: 0.32em;
     }
 
     .panel {
@@ -293,7 +405,7 @@
 
     .receipt-viewport.printing,
     .receipt-viewport.done {
-      max-height: 520px;
+      max-height: 2000px;
     }
 
     .receipt-paper {
@@ -429,42 +541,56 @@
       background: var(--bg);
     }
 
-    .site-footer p {
-      font-size: 0.6875rem;
+    .site-footer .footer-credit {
+      font-size: 0.8125rem;
       font-weight: 400;
-      line-height: 1.65;
+      line-height: 1.5;
       color: var(--text-tertiary);
-      letter-spacing: -0.01em;
+      letter-spacing: 0.02em;
       max-width: 480px;
       margin: 0 auto;
     }
 
-    .site-footer p + p { margin-top: 0.35rem; }
-
-    .site-footer a {
-      color: var(--text-tertiary);
-      text-decoration: none;
+    .site-footer .footer-privacy {
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.65;
+      color: rgba(0, 0, 0, 0.36);
+      letter-spacing: 0.01em;
+      max-width: 420px;
+      margin: 1.5rem auto 0;
     }
-
-    .site-footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <main>
-    <header class="hero">
-      <p class="hero-eyebrow">Philosophical Nonsense</p>
-      <h1>废话生成器</h1>
-      <p class="hero-sub">表面人间清醒，细品全是废话</p>
-    </header>
+  <button type="button" class="settings-trigger" id="settingsBtn" aria-label="打开设置" title="设置">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  </button>
 
-    <section class="panel">
-      <p class="field-label">DEEPSEEK API KEY</p>
+  <div class="settings-backdrop" id="settingsBackdrop" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-header">
+        <span class="settings-title" id="settingsTitle">DeepSeek API Key</span>
+        <button type="button" class="settings-close" id="settingsClose" aria-label="关闭">×</button>
+      </div>
+      <p class="field-label">API KEY</p>
       <div class="api-row">
         <input type="password" id="apiKey" placeholder="sk-xxxxxxxx" autocomplete="off" />
         <button type="button" class="btn-ghost" id="toggleKey">显示</button>
       </div>
       <p class="field-hint">密钥仅保存在本机浏览器，除 DeepSeek 官方接口外不会上传至其他服务器。</p>
-    </section>
+    </div>
+  </div>
+
+  <main>
+    <header class="hero">
+      <p class="hero-eyebrow">Philosophical Nonsense</p>
+      <h1>废话生成器</h1>
+      <p class="hero-sub">Form follows Nonsense.</p>
+    </header>
 
     <section class="panel">
       <p class="field-label">废话主题</p>
@@ -515,8 +641,8 @@
   </main>
 
   <footer class="site-footer">
-    <p>Made by Zing14</p>
-    <p>隐私政策：我们不收集你的数据，因为你的生活还没这些废话有意思。</p>
+    <p class="footer-credit">Made by Zing14</p>
+    <p class="footer-privacy">隐私政策：我们不收集你的数据，因为你的生活还没这些废话有意思。</p>
   </footer>
 
   <script>
@@ -560,6 +686,37 @@
       const show = apiKeyInput.type === "password";
       apiKeyInput.type = show ? "text" : "password";
       toggleKeyBtn.textContent = show ? "隐藏" : "显示";
+    });
+
+    const settingsBtn = document.getElementById("settingsBtn");
+    const settingsBackdrop = document.getElementById("settingsBackdrop");
+    const settingsPanel = document.getElementById("settingsPanel");
+    const settingsClose = document.getElementById("settingsClose");
+
+    function openSettings() {
+      settingsBackdrop.hidden = false;
+      requestAnimationFrame(() => settingsBackdrop.classList.add("open"));
+      settingsBtn.setAttribute("aria-expanded", "true");
+      setTimeout(() => apiKeyInput.focus(), 280);
+    }
+
+    function closeSettings() {
+      settingsBackdrop.classList.remove("open");
+      settingsBtn.setAttribute("aria-expanded", "false");
+      setTimeout(() => {
+        if (!settingsBackdrop.classList.contains("open")) settingsBackdrop.hidden = true;
+      }, 260);
+    }
+
+    settingsBtn.setAttribute("aria-expanded", "false");
+    settingsBtn.addEventListener("click", openSettings);
+    settingsClose.addEventListener("click", closeSettings);
+    settingsBackdrop.addEventListener("click", (e) => {
+      if (e.target === settingsBackdrop) closeSettings();
+    });
+    settingsPanel.addEventListener("click", (e) => e.stopPropagation());
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && settingsBackdrop.classList.contains("open")) closeSettings();
     });
 
     document.querySelectorAll(".chip").forEach((chip) => {
@@ -664,6 +821,7 @@
       receiptViewport.classList.remove("printing", "done");
       receiptPaper.classList.remove("emerging");
       receiptPaper.style.transform = "translateY(-100%)";
+      receiptViewport.style.maxHeight = "0";
       receiptFooter.style.display = "none";
       outputText.className = "receipt-text loading";
       outputText.textContent = "正在酝酿…";
@@ -673,6 +831,10 @@
       const d = new Date();
       const pad = (n) => String(n).padStart(2, "0");
       return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    function syncReceiptHeight() {
+      receiptViewport.style.maxHeight = receiptPaper.scrollHeight + "px";
     }
 
     async function printReceipt(text, theme) {
@@ -694,6 +856,7 @@
 
       receiptPaper.style.transition = "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)";
       receiptPaper.style.transform = "translateY(0)";
+      syncReceiptHeight();
 
       await new Promise((r) => setTimeout(r, 380));
       if (ctrl.aborted) return;
@@ -706,10 +869,7 @@
         if (ctrl.aborted) return;
         displayed += chars[i];
         outputText.innerHTML = displayed + '<span class="receipt-cursor"></span>';
-
-        const lineCount = displayed.split("\n").length;
-        const approxHeight = Math.min(60 + lineCount * 28 + displayed.length * 0.5, 480);
-        receiptViewport.style.maxHeight = approxHeight + "px";
+        syncReceiptHeight();
 
         if (i % tickEvery === 0) playPrintTick();
         await new Promise((r) => setTimeout(r, 38 + Math.random() * 22));
@@ -718,8 +878,9 @@
       if (ctrl.aborted) return;
 
       outputText.textContent = displayed;
-      receiptViewport.classList.add("done");
       receiptFooter.style.display = "flex";
+      syncReceiptHeight();
+      receiptViewport.classList.add("done");
       outputMeta.textContent = `主题：${theme}`;
       latestText = text;
       playPrintDone();
@@ -739,6 +900,7 @@
 
       if (!apiKey) {
         showError("请先填入 API Key，没有钥匙开不了这台废话机。");
+        openSettings();
         return;
       }
       if (!theme) {
@@ -760,12 +922,12 @@
       latestText = "";
       printerLed.classList.add("on");
       receiptViewport.classList.add("printing");
-      receiptViewport.style.maxHeight = "120px";
       receiptPaper.classList.add("emerging");
       receiptPaper.style.transition = "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)";
       receiptPaper.style.transform = "translateY(0)";
       outputText.className = "receipt-text loading";
       outputText.textContent = "正在向宇宙申请一句刻薄的废话…";
+      syncReceiptHeight();
 
       const prompt = `请围绕「${theme}」这个主题，写一段中文「毒舌哲学」式废话。
 
