@@ -436,16 +436,7 @@
         <input type="text" id="themeInput" placeholder="随便写点什么…" maxlength="20" />
         <button type="button" class="btn-generate" id="generateBtn">生成</button>
       </div>
-      <div class="chips">
-        <button type="button" class="chip" data-theme="早八">早八</button>
-        <button type="button" class="chip" data-theme="前任">前任</button>
-        <button type="button" class="chip" data-theme="减肥">减肥</button>
-        <button type="button" class="chip" data-theme="人生意义">人生意义</button>
-        <button type="button" class="chip" data-theme="开会">开会</button>
-        <button type="button" class="chip" data-theme="努力">努力</button>
-        <button type="button" class="chip" data-theme="摸鱼">摸鱼</button>
-        <button type="button" class="chip" data-theme="加班">加班</button>
-      </div>
+      <div class="chips" id="chipsContainer"></div>
     </section>
 
     <p class="error-msg" id="errorMsg" role="alert"></p>
@@ -484,6 +475,56 @@
   </footer>
 
   <script>
+    function buildChips(words) {
+      const container = document.getElementById("chipsContainer");
+      container.innerHTML = "";
+      words.forEach(word => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chip";
+        btn.dataset.theme = word;
+        btn.textContent = word;
+        btn.addEventListener("click", () => {
+          themeInput.value = word;
+          themeInput.focus();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    async function renderChips() {
+      const container = document.getElementById("chipsContainer");
+      // 先用本地兜底词占位，避免空白
+      buildChips(getFallbackWords());
+      try {
+        const resp = await fetch("/api/suggestions");
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (Array.isArray(data.words) && data.words.length > 0) {
+          buildChips(data.words);
+        }
+      } catch (_) { /* 静默降级，已有兜底词 */ }
+    }
+
+    function getFallbackWords() {
+      const now  = new Date();
+      const day  = now.getDay();
+      const hour = now.getHours();
+      const pool = [];
+      if (day === 5)  pool.push('周五快放假');
+      if (day === 0)  pool.push('星期天综合症');
+      if (day === 1)  pool.push('星期一');
+      if (hour < 6)   pool.push('深夜失眠');
+      if (hour >= 6 && hour < 9) pool.push('早八');
+      if (hour >= 22) pool.push('睡前焦虑');
+      return [...new Set([...pool, '人生意义','努力','摸鱼','减肥','开会','加班'])].slice(0, 7);
+    }
+
+    // ── 彩蛋：输入 Zing14 ──────────────────────────────────
+    const EASTER_EGG_KEY = "zing14";
+    const EASTER_TEXT = `Zing14，你好。\n\n这个工具是你做的。\n它比你更勤奋——至少它一直在输出内容。\n\n但说到底，制造废话的人，\n往往比废话本身更有意思。\n\n——来自废话生成器的诚实评价`;
+    const EASTER_RANK = "🎖 创作者身份已核实 · 欢迎回家";
+
     const RANK_LABELS = [
       "您已进入·初级废话境界",
       "恭喜解锁·人间清醒成就",
@@ -631,7 +672,7 @@
       receiptViewport.style.maxHeight = receiptPaper.scrollHeight + "px";
     }
 
-    async function printReceipt(text, theme) {
+    async function printReceipt(text, theme, isEasterEgg = false) {
       abortPrint();
       const ctrl = { aborted: false };
       printAbort = ctrl;
@@ -679,7 +720,7 @@
       latestText = text;
       playPrintDone();
 
-      rankLine.textContent = randomRank();
+      rankLine.textContent = isEasterEgg ? EASTER_RANK : randomRank();
       requestAnimationFrame(() => rankLine.classList.add("show"));
 
       printAbort = null;
@@ -695,6 +736,9 @@
         showError("主题不能为空——总得找点东西来挖苦吧。");
         return;
       }
+
+      // 彩蛋检测
+      const isEasterEgg = theme.toLowerCase() === EASTER_EGG_KEY;
 
       try { getAudioCtx().resume(); } catch (_) {}
 
@@ -712,24 +756,27 @@
       receiptPaper.style.transition = "transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)";
       receiptPaper.style.transform = "translateY(0)";
       outputText.className = "receipt-text loading";
-      outputText.textContent = "正在向宇宙申请一句刻薄的废话…";
+      outputText.textContent = isEasterEgg ? "身份核验中…" : "正在向宇宙申请一句刻薄的废话…";
       syncReceiptHeight();
 
       try {
-        const resp = await fetch("/api/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ theme }),
-        });
+        let text;
 
-        const data = await resp.json().catch(() => ({}));
+        if (isEasterEgg) {
+          await new Promise(r => setTimeout(r, 900));
+          text = EASTER_TEXT;
+        } else {
+          const resp = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ theme }),
+          });
 
-        if (!resp.ok) {
-          throw new Error(data.error || `HTTP ${resp.status}`);
+          const data = await resp.json().catch(() => ({}));
+          if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
+          text = data.text?.trim();
+          if (!text) throw new Error("返回内容为空");
         }
-
-        const text = data.text?.trim();
-        if (!text) throw new Error("返回内容为空");
 
         receiptPaper.style.transition = "none";
         receiptPaper.style.transform = "translateY(-100%)";
@@ -739,7 +786,7 @@
 
         await new Promise((r) => requestAnimationFrame(r));
 
-        await printReceipt(text, theme);
+        await printReceipt(text, theme, isEasterEgg);
       } catch (e) {
         abortPrint();
         printerSection.classList.remove("visible");
@@ -752,6 +799,9 @@
     }
 
     generateBtn.addEventListener("click", generate);
+
+    // 初始化动态 chips
+    renderChips();
   </script>
 </body>
 </html>
